@@ -1,3 +1,4 @@
+#if !PocketPC
 using System;
 using System.Collections.Generic;
 using RestSharp.Authenticators.OAuth.Extensions;
@@ -402,3 +403,4 @@ namespace RestSharp.Authenticators.OAuth
 		}
 	}
 }
+#endif

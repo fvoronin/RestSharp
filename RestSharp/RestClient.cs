@@ -32,7 +32,11 @@ namespace RestSharp
 	public partial class RestClient : IRestClient
 	{
 		// silverlight friendly way to get current version
+#if !PocketPC
 		static readonly Version version = new AssemblyName(Assembly.GetExecutingAssembly().FullName).Version;
+#else
+        static readonly Version version = Assembly.GetExecutingAssembly().GetName().Version;
+#endif
 
 		public IHttpFactory HttpFactory = new SimpleFactory<Http>();
 
@@ -150,7 +154,7 @@ namespace RestSharp
 		/// </summary>
 		public int? MaxRedirects { get; set; }
 
-#if FRAMEWORK
+#if FRAMEWORK || PocketPC
 		/// <summary>
 		/// X509CertificateCollection to be sent with request
 		/// </summary>
@@ -169,10 +173,13 @@ namespace RestSharp
 		/// </summary>
 		public bool FollowRedirects { get; set; }
 
+        // TODO create CookieContainer for PocketPC version
+#if !PocketPC
 		/// <summary>
 		/// The CookieContainer used for requests made by this client instance
 		/// </summary>
 		public CookieContainer CookieContainer { get; set; }
+#endif
 
 		/// <summary>
 		/// UserAgent to use for requests made by this client instance
@@ -292,7 +299,9 @@ namespace RestSharp
 
 		private void ConfigureHttp(IRestRequest request, IHttp http)
 		{
+#if !PocketPC
 			http.CookieContainer = CookieContainer;
+#endif
 
 			http.ResponseWriter = request.ResponseWriter;
 

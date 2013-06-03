@@ -59,7 +59,7 @@
 //
 // -----------------------------------------------------------------------
 
-#if WINDOWS_PHONE
+#if WINDOWS_PHONE || PocketPC
 
 using System;
 namespace RestSharp.Compression.ZLib

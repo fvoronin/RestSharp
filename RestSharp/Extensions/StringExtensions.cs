@@ -29,7 +29,8 @@ using System.Windows.Browser;
 #if WINDOWS_PHONE
 #endif
 
-#if FRAMEWORK || MONOTOUCH || MONODROID
+#if FRAMEWORK || MONOTOUCH || MONODROID || PocketPC
+using RestSharp.Compact.Extensions;
 using RestSharp.Contrib;
 #endif
 
@@ -102,7 +103,11 @@ namespace RestSharp.Extensions
 			input = input.RemoveSurroundingQuotes();
 
 			long unix;
+#if !PocketPC
 			if (Int64.TryParse(input, out unix))
+#else
+            if (ParseAssistant.TryParse(input, out unix))
+#endif
 			{
 				var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 				return epoch.AddSeconds(unix);
@@ -152,12 +157,19 @@ namespace RestSharp.Extensions
 			};
 
 			DateTime date;
+#if !PocketPC
 			if (DateTime.TryParseExact(input, formats, culture, DateTimeStyles.None, out date))
-			{
+#else
+            if (ParseAssistant.TryParseExact(input, formats, culture, DateTimeStyles.None, out date))
+#endif
+            {
 				return date;
 			}
-
+#if !PocketPC
 			if (DateTime.TryParse(input, culture, DateTimeStyles.None, out date))
+#else
+            if (ParseAssistant.TryParse(input, culture, DateTimeStyles.None, out date))
+#endif
 			{
 				return date;
 			}
@@ -356,5 +368,22 @@ namespace RestSharp.Extensions
 			// try name with underscore prefix, using camel case
 			yield return name.ToCamelCase(culture).AddUnderscorePrefix();
 		}
+
+#if PocketPC
+        public static string ToLowerInvariant(this string text)
+        {
+            return text.ToLower(CultureInfo.InvariantCulture);
+        }
+
+        public static string ToUpperInvariant(this string text)
+        {
+            return text.ToUpper(CultureInfo.InvariantCulture);
+        }
+
+        public static string GetString(this Encoding encoding, byte[] bytes)
+        {
+            return encoding.GetString(bytes, 0, bytes.Length);
+        }
+#endif
 	}
 }

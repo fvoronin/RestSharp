@@ -32,7 +32,7 @@
 //
 // ------------------------------------------------------------------
 
-#if WINDOWS_PHONE
+#if WINDOWS_PHONE || PocketPC
 
 using System;
 using Interop = System.Runtime.InteropServices;

@@ -48,7 +48,11 @@ namespace RestSharp.Contrib
 	{
 		static char[] hexChars = "0123456789abcdef".ToCharArray();
 		static object entitiesLock = new object();
+#if !PocketPC
 		static SortedDictionary<string, char> entities;
+#else
+        static Dictionary<string, char> entities;
+#endif
 #if NET_4_0
 		static Lazy <HttpEncoder> defaultEncoder;
 		static Lazy <HttpEncoder> currentEncoderLazy;
@@ -229,7 +233,11 @@ namespace RestSharp.Contrib
 			for (int i = 0; i < length; i++)
 				UrlPathEncodeChar(value[i], result);
 
+#if !PocketPC
 			return Encoding.ASCII.GetString(result.ToArray());
+#else
+            return Encoding.ASCII.GetString(result.ToArray(), 0, (int) result.Length);
+#endif
 		}
 
 		internal static byte[] UrlEncodeToBytes(byte[] bytes, int offset, int count)
@@ -659,7 +667,11 @@ namespace RestSharp.Contrib
 		{
 			// Build the hash table of HTML entity references.  This list comes
 			// from the HTML 4.01 W3C recommendation.
+#if !PocketPC
 			entities = new SortedDictionary<string, char>(StringComparer.Ordinal);
+#else
+            entities = new Dictionary<string, char>(StringComparer.Ordinal);
+#endif
 
 			entities.Add("nbsp", '\u00A0');
 			entities.Add("iexcl", '\u00A1');

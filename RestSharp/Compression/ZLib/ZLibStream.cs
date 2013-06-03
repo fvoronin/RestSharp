@@ -25,7 +25,7 @@
 //
 // ------------------------------------------------------------------
 
-#if WINDOWS_PHONE
+#if WINDOWS_PHONE || PocketPC
 
 using System;
 using System.IO;

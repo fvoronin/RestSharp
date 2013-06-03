@@ -26,10 +26,12 @@ namespace RestSharp
 	/// </summary>
 	public interface IRestClient
 	{
+#if !PocketPC
 		/// <summary>
 		/// 
 		/// </summary>
 		CookieContainer CookieContainer { get; set; }
+#endif
 		/// <summary>
 		/// 
 		/// </summary>
@@ -54,6 +56,8 @@ namespace RestSharp
 		/// 
 		/// </summary>
 		IList<Parameter> DefaultParameters { get; }
+
+#if !PocketPC
 		/// <summary>
 		/// 
 		/// </summary>
@@ -64,8 +68,9 @@ namespace RestSharp
 		/// </summary>
 		/// <param name="request"></param>
 		RestRequestAsyncHandle ExecuteAsync<T>(IRestRequest request, Action<IRestResponse<T>, RestRequestAsyncHandle> callback);
+#endif
 
-#if FRAMEWORK
+#if FRAMEWORK || PocketPC
 		/// <summary>
 		/// X509CertificateCollection to be sent with request
 		/// </summary>
@@ -78,6 +83,7 @@ namespace RestSharp
 
 		Uri BuildUri(IRestRequest request);
 
+#if !PocketPC
 		/// <summary>
 		/// Executes a GET-style request and callback asynchronously, authenticating if needed
 		/// </summary>
@@ -111,6 +117,7 @@ namespace RestSharp
 		/// <param name="callback">Callback function to be executed upon completion</param>
 		/// <param name="httpMethod">The HTTP method to execute</param>
 		RestRequestAsyncHandle ExecuteAsyncPost<T>(IRestRequest request, Action<IRestResponse<T>, RestRequestAsyncHandle> callback, string httpMethod);
+#endif
 
 #if FRAMEWORK
 		IRestResponse ExecuteAsGet(IRestRequest request, string httpMethod);

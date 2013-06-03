@@ -14,7 +14,7 @@
 //   limitations under the License. 
 #endregion
 
-#if FRAMEWORK
+#if FRAMEWORK || PocketPC
 using System;
 using System.Net;
 
@@ -203,11 +203,15 @@ namespace RestSharp
 		private HttpWebRequest ConfigureWebRequest(string method, Uri url)
 		{
 			var webRequest = (HttpWebRequest)WebRequest.Create(url);
+#if !PocketPC
 			webRequest.UseDefaultCredentials = false;
+#endif
 			ServicePointManager.Expect100Continue = false;
 
 			AppendHeaders(webRequest);
+#if !PocketPC
 			AppendCookies(webRequest);
+#endif
 
 			webRequest.Method = method;
 
@@ -245,7 +249,8 @@ namespace RestSharp
 			}
 
 			webRequest.AllowAutoRedirect = FollowRedirects;
-			if(FollowRedirects && MaxRedirects.HasValue)
+
+            if(FollowRedirects && MaxRedirects.HasValue)
 			{
 				webRequest.MaximumAutomaticRedirections = MaxRedirects.Value; 
 			}

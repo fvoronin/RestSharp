@@ -170,7 +170,11 @@ namespace RestSharp.Deserializers
 			{
 				return stringValue;
 			}
-			else if (type == typeof(DateTime) || type == typeof(DateTimeOffset))
+			else if (type == typeof(DateTime) 
+#if !PocketPC
+                || type == typeof(DateTimeOffset)
+#endif
+                )
 			{
 				DateTime dt;
 				if (DateFormat.HasValue())
@@ -187,10 +191,12 @@ namespace RestSharp.Deserializers
 				{
 					return dt;
 				}
+#if !PocketPC
 				else if (type == typeof(DateTimeOffset))
 				{
 					return (DateTimeOffset)dt;
 				}
+#endif
 			}
 			else if (type == typeof(Decimal))
 			{

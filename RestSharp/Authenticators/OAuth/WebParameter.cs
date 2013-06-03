@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace RestSharp.Authenticators.OAuth
 {
-#if !Smartphone
+#if !(Smartphone || PocketPC)
 	[DebuggerDisplay("{Name}:{Value}")]
 #endif
 #if !SILVERLIGHT && !WINDOWS_PHONE

@@ -5,7 +5,8 @@ namespace RestSharp
 {
 	public static partial class RestClientExtensions
 	{
-		/// <summary>
+#if !PocketPC
+        /// <summary>
 		/// Executes the request and callback asynchronously, authenticating if needed
 		/// </summary>
 		/// <param name="client">The IRestClient this method extends</param>
@@ -111,7 +112,9 @@ namespace RestSharp
             request.Method = Method.DELETE;
             return client.ExecuteAsync(request, callback);
         }
-#if FRAMEWORK
+#endif
+
+#if FRAMEWORK || PocketPC
 		public static IRestResponse<T> Get<T>(this IRestClient client, IRestRequest request) where T : new()
 		{
 			request.Method = Method.GET;

@@ -25,7 +25,9 @@ namespace RestSharp
 	public interface IHttp
 	{
 		Action<Stream> ResponseWriter { get; set; }
+#if !PocketPC
 		CookieContainer CookieContainer { get; set; }
+#endif
 		ICredentials Credentials { get; set; }
 		string UserAgent { get; set; }
 		int Timeout { get; set; }
@@ -61,7 +63,7 @@ namespace RestSharp
 		HttpWebRequest AsPostAsync(Action<HttpResponse> action, string httpMethod);
 		HttpWebRequest AsGetAsync(Action<HttpResponse> action, string httpMethod);
 
-#if FRAMEWORK
+#if FRAMEWORK || PocketPC
 		HttpResponse Delete();
 		HttpResponse Get();
 		HttpResponse Head();

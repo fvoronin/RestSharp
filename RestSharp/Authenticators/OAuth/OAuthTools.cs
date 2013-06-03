@@ -1,3 +1,5 @@
+// TODO create HMACSHA1 for PocketPC
+#if !PocketPC
 using System;
 using System.Linq;
 using System.Security.Cryptography;
@@ -333,3 +335,4 @@ namespace RestSharp.Authenticators.OAuth
 		}
 	}
 }
+#endif

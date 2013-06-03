@@ -14,6 +14,7 @@
 //   limitations under the License. 
 #endregion
 
+#if !PocketPC
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace RestSharp
 		/// <param name="callback">Callback function to be executed upon completion providing access to the async handle.</param>
 		public virtual RestRequestAsyncHandle ExecuteAsync(IRestRequest request, Action<IRestResponse, RestRequestAsyncHandle> callback)
 		{
-
+#if !PocketPC
 				string method = Enum.GetName(typeof (Method), request.Method);
 				switch (request.Method)
 				{
@@ -43,6 +44,27 @@ namespace RestSharp
 						default:
 							return ExecuteAsync(request, callback, method, DoAsGetAsync);
 				}
+#else
+            switch (request.Method)
+            {
+                case Method.PATCH:
+                    return ExecuteAsync(request, callback, "PATCH", DoAsPostAsync);
+                case Method.POST:
+                    return ExecuteAsync(request, callback, "POST", DoAsPostAsync);
+                case Method.PUT:
+                    return ExecuteAsync(request, callback, "PUT", DoAsPostAsync);
+                case Method.GET:
+                    return ExecuteAsync(request, callback, "GET", DoAsGetAsync);
+                case Method.DELETE:
+                    return ExecuteAsync(request, callback, "DELETE", DoAsGetAsync);
+                case Method.HEAD:
+                    return ExecuteAsync(request, callback, "HEAD", DoAsGetAsync);
+                case Method.OPTIONS:
+                    return ExecuteAsync(request, callback, "OPTIONS", DoAsGetAsync);
+                default:
+                    return ExecuteAsync(request, callback, "", DoAsGetAsync);
+            }
+#endif
 		}
 
 		/// <summary>
@@ -154,3 +176,4 @@ namespace RestSharp
 		}
 	}
 }
+#endif

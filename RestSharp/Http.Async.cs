@@ -366,10 +366,15 @@ namespace RestSharp
 			WebRequest.RegisterPrefix("https://", WebRequestCreator.ClientHttp);
 #endif
 			var webRequest = (HttpWebRequest)WebRequest.Create(url);
+
+#if !PocketPC
 			webRequest.UseDefaultCredentials = false;
+#endif
 
 			AppendHeaders(webRequest);
+#if !PocketPC
 			AppendCookies(webRequest);
+#endif
 
 			webRequest.Method = method;
 

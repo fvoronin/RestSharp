@@ -25,4 +25,6 @@ using System;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("104.2.0.0")]
+#if !PocketPC
 [assembly: AssemblyFileVersion("104.2.0.0")]
+#endif

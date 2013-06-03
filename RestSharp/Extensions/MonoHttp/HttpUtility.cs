@@ -37,6 +37,9 @@ using System.Globalization;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
+#if PocketPC
+using RestSharp.Extensions;
+#endif
 
 namespace RestSharp.Contrib
 {
@@ -182,7 +185,11 @@ namespace RestSharp.Contrib
 
 			byte[] buf = bytes.ToArray();
 			bytes = null;
+#if !PocketPC
 			return e.GetString(buf);
+#else
+            return e.GetString(buf, 0, buf.Length);
+#endif
 
 		}
 

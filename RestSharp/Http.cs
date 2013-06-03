@@ -23,7 +23,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using RestSharp.Extensions;
 
-#if WINDOWS_PHONE
+#if WINDOWS_PHONE || PocketPC
 using RestSharp.Compression.ZLib;
 #endif
 
@@ -102,10 +102,12 @@ namespace RestSharp
 		/// System.Net.ICredentials to be sent with request
 		/// </summary>
 		public ICredentials Credentials { get; set; }
-		/// <summary>
+#if !PocketPC		
+        /// <summary>
 		/// The System.Net.CookieContainer to be used for the request
 		/// </summary>
 		public CookieContainer CookieContainer { get; set; }
+#endif
 		/// <summary>
 		/// The method to use to write the response instead of reading into RawBytes
 		/// </summary>
@@ -120,7 +122,7 @@ namespace RestSharp
 		/// </summary>
 		public bool FollowRedirects { get; set; }
 #endif
-#if FRAMEWORK
+#if FRAMEWORK || PocketPC
 		/// <summary>
 		/// X509CertificateCollection to be sent with request
 		/// </summary>
@@ -159,7 +161,7 @@ namespace RestSharp
 		/// </summary>
 		public Uri Url { get; set; }
 
-#if FRAMEWORK
+#if FRAMEWORK || PocketPC
 		/// <summary>
 		/// Proxy info to be sent with request
 		/// </summary>
@@ -253,6 +255,7 @@ namespace RestSharp
 			}
 		}
 
+#if !PocketPC
 		private void AppendCookies(HttpWebRequest webRequest)
 		{
 			webRequest.CookieContainer = this.CookieContainer ?? new CookieContainer();
@@ -277,7 +280,7 @@ namespace RestSharp
 #endif
 			}
 		}
-
+#endif
 		private string EncodeParameters()
 		{
 			var querystring = new StringBuilder();
@@ -345,8 +348,8 @@ namespace RestSharp
 				response.ContentType = webResponse.ContentType;
 				response.ContentLength = webResponse.ContentLength;
 				Stream webResponseStream = webResponse.GetResponseStream();
-#if WINDOWS_PHONE
-				if (String.Equals(webResponse.Headers[HttpRequestHeader.ContentEncoding], "gzip", StringComparison.OrdinalIgnoreCase))
+#if WINDOWS_PHONE  || PocketPC
+                if (String.Equals(webResponse.Headers["Content-Encoding"], "gzip", StringComparison.OrdinalIgnoreCase))
 				{
 					var gzStream = new GZipStream(webResponseStream);
 					ProcessResponseStream(gzStream, response);
@@ -363,6 +366,7 @@ namespace RestSharp
 				response.ResponseUri = webResponse.ResponseUri;
 				response.ResponseStatus = ResponseStatus.Completed;
 
+#if !PocketPC
 				if (webResponse.Cookies != null)
 				{
 					foreach (Cookie cookie in webResponse.Cookies)
@@ -385,7 +389,7 @@ namespace RestSharp
 						});
 					}
 				}
-
+#endif
 				foreach (var headerName in webResponse.Headers.AllKeys)
 				{
 					var headerValue = webResponse.Headers[headerName];
